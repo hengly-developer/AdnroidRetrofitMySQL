@@ -1,6 +1,7 @@
 package com.example.xxxxxx.adnroidretrofitmysql.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.xxxxxx.adnroidretrofitmysql.MainActivity;
 import com.example.xxxxxx.adnroidretrofitmysql.R;
 import com.example.xxxxxx.adnroidretrofitmysql.model.DataModel;
 
@@ -60,7 +62,13 @@ public class AdapterData extends RecyclerView.Adapter<AdapterData.HolderData> {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Intent input = new Intent(ctx, MainActivity.class);
+                    input.putExtra("npm",models.getNpm());
+                    input.putExtra("nama",models.getNama());
+                    input.putExtra("prodi",models.getProdi());
+                    input.putExtra("fakeultas",models.getFakeultas());
 
+                    ctx.startActivity(input);
                 }
             });
         }

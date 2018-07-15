@@ -26,4 +26,8 @@ public interface ApiRequest {
                                  @Field("nama") String nama,
                                  @Field("prodi") String prodi,
                                  @Field("fakeultas") String fakeultas);
+
+    @FormUrlEncoded
+    @POST("delete_data.php")
+    Call<ResponseModel> deleteData(@Field("npm") String npm);
 }
