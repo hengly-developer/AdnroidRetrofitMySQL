@@ -20,7 +20,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
     EditText txtnpm,txtnama,txtprodi,txtfakeultas;
-    Button btnInsert,btnListData;
+    Button btnInsert,btnListData,btnUpdate,btnDelete;
     String npm,nama,prodi,fakeultas;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +34,22 @@ public class MainActivity extends AppCompatActivity {
 
         btnInsert = findViewById(R.id.btnInsert);
         btnListData = findViewById(R.id.btnlistData);
+        btnUpdate = findViewById(R.id.btnupdateData);
+        btnDelete = findViewById(R.id.btnDeleteData);
+
+        Intent data = getIntent();
+        final String id = data.getStringExtra("npm");
+        if (id != null){
+            btnInsert.setVisibility(View.GONE);
+            btnListData.setVisibility(View.GONE);
+            btnUpdate.setVisibility(View.VISIBLE);
+            btnDelete.setVisibility(View.VISIBLE);
+
+             txtnpm.setText(data.getStringExtra("npm"));
+             txtnama.setText(data.getStringExtra("nama"));
+             txtprodi.setText(data.getStringExtra("prodi"));
+             txtfakeultas.setText(data.getStringExtra("fakeultas"));
+        }
 
         btnListData.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,6 +58,46 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ApiRequest api = RetroServer.getClient().create(ApiRequest.class);
+                Call<ResponseModel> deleteModel = api.deleteData(id);
+                deleteModel.enqueue(new Callback<ResponseModel>() {
+                    @Override
+                    public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                        Toast.makeText(MainActivity.this, response.body().getPesan(), Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(MainActivity.this,ListDataActivity.class);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseModel> call, Throwable t) {
+
+                    }
+                });
+            }
+        });
+
+         btnUpdate.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 ApiRequest api = RetroServer.getClient().create(ApiRequest.class);
+                 Call<ResponseModel> updateModel = api.updateData(id,txtnama.getText().toString(),txtprodi.getText().toString(),txtfakeultas.getText().toString());
+                 updateModel.enqueue(new Callback<ResponseModel>() {
+                     @Override
+                     public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                         Toast.makeText(MainActivity.this, response.body().getPesan()   , Toast.LENGTH_SHORT).show();
+                     }
+
+                     @Override
+                     public void onFailure(Call<ResponseModel> call, Throwable t) {
+
+                     }
+                 });
+             }
+         });
 
         final ApiRequest api = RetroServer.getClient().create(ApiRequest.class);
         btnInsert.setOnClickListener(new View.OnClickListener() {
